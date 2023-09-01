@@ -97,7 +97,7 @@ const Sidebar = () => {
     const [expandedTopic, setExpandedTopic] = useState(null)
 
     return (
-        <div className="absolute flex-col w-80 justify-between overflow-scroll bg-[#f5f5f5] h-screen border-r-2 border-opacity-60 border-[#C1C0C0] ">
+        <div className="absolute flex-col w-[17%] justify-between overflow-scroll bg-[#f5f5f5] h-screen border-r-2 border-opacity-60 border-[#C1C0C0] ">
             <div className="flex flex-col  h-full w-full">
                 <h1 className="flex justify-center text-3xl font-Rubik text-center mt-8 mr-1">
                     <span className="text-[#2890A7]">Learn</span><span className="text-[#6F6F6F]">anything</span>
