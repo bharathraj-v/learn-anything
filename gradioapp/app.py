@@ -1,13 +1,13 @@
-from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-llm = OpenAI(openai_api_key="...")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-llm = OpenAI()
-chat_model = ChatOpenAI()
-
-llm.predict("hi!")
+llm = ChatOpenAI(model="gpt-3.5-turbo",  openai_api_key=OPENAI_API_KEY)
+print(llm.predict("hi!"))
 
 # import gradio as gr
 
