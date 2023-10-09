@@ -21,6 +21,7 @@ from langchain.prompts import (
 from langchain.chains import LLMChain, ConversationChain
 from langchain.memory import ConversationBufferMemory, ConversationSummaryMemory, ChatMessageHistory
 from langchain.schema import SystemMessage
+from langchain.memory import ConversationBufferMemory
 
 import os
 from dotenv import load_dotenv
@@ -49,10 +50,11 @@ class Guide(APIView):
             "{human_input}"),  # Where the human input will injected
     ])
 
-    memory = ConversationSummaryMemory(llm=OpenAI(
-        openai_api_key=OPENAI_API_KEY, model='gpt-3.5-turbo-instruct'), memory_key="chat_history", return_messages=True)
+    # memory = ConversationSummaryMemory(llm=OpenAI(
+    #     openai_api_key=OPENAI_API_KEY, model='gpt-3.5-turbo-instruct'), memory_key="chat_history", return_messages=True
+    #     )
     llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model='gpt-3.5-turbo')
-
+    memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     chat_llm_chain = LLMChain(
         llm=llm,
         prompt=prompt,
