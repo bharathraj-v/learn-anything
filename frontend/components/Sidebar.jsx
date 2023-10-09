@@ -162,11 +162,11 @@ const Sidebar = () => {
                     </button>
                 </div>
 
-                <h2 className="flex h-8 justify-start text-lg px-9 font-semibold font-Inter text-center mt-6 mr-1">
+                {/* <h2 className="flex h-8 justify-start text-lg px-9 font-semibold font-Inter text-center mt-6 mr-1">
                     <span className="h-8 text-[#6F6F6F]"> Your Topics</span>
-                </h2>
+                </h2> */}
 
-                <div className="flex h-12 text-md justify-center items-center  px-7 font-semibold font-Inter text-center mt-2 mr-1">
+                <div className="flex h-12 text-md justify-center items-center  px-7 font-semibold font-Inter text-center mt-6 mr-1">
                     <textarea
                         placeholder="Search topic"
                         className="flex w-full h-11 justify-center items-center py-2 px-4 border-1 text-light border-[#19191] text-[#6F6F6F] rounded-md resize-none bg-white outline-none" />

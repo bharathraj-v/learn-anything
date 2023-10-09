@@ -6,9 +6,11 @@ const Topbar = () => {
             <div className="flex items-center ml-8">
                 <h1 className="text-3xl font-Rubik text-center"></h1>
             </div>
-            <div className="flex items-center mr-8">
+            <div className="flex items-center space-x-6 mr-8">
+            <p className="text-gray-500 font-Inter font-medium hover:cursor-pointer hover:underline">Bharath Raj</p>
                 <button className="bg-gray-500 text-white rounded-full px-4 py-2 h-10 w-10 font-Rubik text-lg"></button>
             </div>
+
         </div>
     )
 }
