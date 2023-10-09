@@ -1,58 +1,37 @@
 import { useState, useEffect } from "react"
+import axios from 'axios';
 
 
+const ChatInterface = () => {
 
-const ChatInterface = (history) => {
-
-    const [messages, setMessages] = useState([
-            {
-                id: 1,
-                sender: "user",
-                message: "Hi",
-            },
-            {
-                id: 2,
-                sender: "bot",
-                message: "Hi, I'm the Topic Guide for LearnAnything. I'm here to help you learn anything you want. What's your name?",
-            },
-            {
-                id: 3,
-                sender: "user",
-                message: "I'm Bharath Raj",
-            },
-            {
-                id: 4,
-                sender: "bot",
-                message: 'Hi Bharath Raj! Nice to meet you. How old are you?',
-            },
-            {
-                id: 5,
-                sender: "user",
-                message: "I'm 20 years old",
-            },
-            {
-                id: 6,
-                sender: "bot",
-                message: "Hi Bharath Raj! Nice to meet you. As a Topic Guide for LearnAnything, I'm here to help you learn anything you want. What are your goals and what is your educational background?",
-            },
-            {
-                id: 7,
-                sender: "user",
-                message: "I wanna be a deep learning engineer. I'm currently an undergraduate student",
-            },
-            {
-                id: 8,
-                sender: "bot",
-                message: "That's great, Bharath Raj! As an undergraduate student in computer science, learning deep learning theory will be an excellent addition to your skill set. It's an exciting field with a lot of potential for growth. To make sure I provide you with the most relevant topics and subtopics, could you please let me know how in-depth you would like to learn about deep learning theory? Are you looking for a high-level overview or do you want to dive into the technical details?",
-            },        
-                
+    const [history, setHistory] = useState([        
     ]) 
+
+    const [message, setMessage] = useState("")
+    const [response, setResponse] = useState("")
 
     useEffect(() => {
         // change scroll position to bottom
         const chat = document.getElementById("chat");
         chat.scrollTop = chat.scrollHeight;
-    }, [messages])
+    }, [history])
+
+    const sendMessage = async (message) => {
+        const post = {"message": message}
+        try {
+            const res = await axios.post('http://localhost:8000/guide/', post)
+            console.log(res.data.message)
+            setResponse(res.data.message)
+            setHistory([...history, { "id": history.length, "sender": "human", "message": message }, { "id": history.length, "sender": "bot", "message": res.data.message }])
+            console.log(res.data.topics)
+
+        } catch (err) {
+            console.log(err)
+
+        }
+    }
+        
+
 
     return (
         <div id = "chat" className="absolute mt-[3%] ml-[17%] h-[94%] overflow-scroll w-[83%]">
@@ -61,6 +40,17 @@ const ChatInterface = (history) => {
                 <div className="flex rounded-lg border-2 shadow-md border-[#919191] font-Inter border-opacity-50 w-[90%] h-12 px-4 justify-between bg-white items-center">
                     <textarea
                         placeholder="Send a message"
+                        onInput={(e) => {
+                            // on enter, send message
+                            if (e.nativeEvent.inputType == "insertLineBreak" && message != "") {
+                                sendMessage(message)
+                                setMessage("")
+                            } else {
+                                setMessage(e.target.value)
+                            }
+                        }}
+                        value={message}
+
                         className="flex w-full h-11 justify-center items-center py-2 px-2  text-light  text-[#303030] rounded-md resize-none  outline-none" />
                     <span className="flex text-[#303030] ">
                         <svg
@@ -114,10 +104,10 @@ const ChatInterface = (history) => {
                 </div>
             </div> */}
             {
-                messages.map((message) => {
+                history.map((message) => {
                     if (message.sender == "bot") {
                         return (
-                            <div id="bot" className="flex py-4 flex-row justify-start  w-full">
+                            <div id={message.id} className="flex py-2 flex-row justify-start  w-full">
                                 <div className = "absolute h-12 w-12 bg-[#2890A7] rounded-full"> </div>
                                 <div className="flex px-5 py-3  leading-normal text-[#303030] ml-16 font-Inter bg-white rounded-lg" >
                                     {message.message}
@@ -127,7 +117,7 @@ const ChatInterface = (history) => {
                     }
                     else {
                         return (
-                            <div id="human" className="flex py-4 justify-end flex-row  w-full">
+                            <div id={message.id} className="flex py-2 justify-end flex-row  w-full">
                                 <div className="flex px-5 py-3  leading-normal text-[#303030] mr-16 font-Inter  bg-[#D9D9D9] rounded-lg" >
                                     {message.message}
                                 </div>
