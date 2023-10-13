@@ -59,6 +59,7 @@ def chat(message, history):
             for j in range(topics_indexes[i]+1, topics_indexes[i+1]):
                 topics_dict[topics[i]].append(topic_message[j].strip("- "))
         print(topics_dict)
+        memory.clear()
         return "CONVERSATION ENDED"
     else: 
         return response
