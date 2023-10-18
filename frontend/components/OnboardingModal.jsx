@@ -1,7 +1,7 @@
-const OnboardingModal = () => {
+const OnboardingModal = ({showOnboarding, setShowOnboarding}) => {
     return (
         <div className="flex w-screen h-screen bg-opacity-50 overflow-clip bg-black ">
-            <div className="flex resize-none flex-col mx-[33%] rounded-xl border-1 border-[#8d8d8d] h-[80%] w-[33%] bg-white   justify-top self-center">
+            <div className="flex resize-none flex-col  rounded-xl border-1 border-[#8d8d8d] mx-[33%] bg-white   justify-top self-center">
             <h1 className="flex resize-none justify-left px-14 text-3xl font-Rubik text-center mt-8 ">
                     <span className="text-[#2890A7]">Learn</span><span className="text-[#6F6F6F]">anything Onboarding</span>
             </h1>
@@ -39,11 +39,15 @@ const OnboardingModal = () => {
                 </p>
                 <input type="text" id="openaikey" name="openaikey" placeholder="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" className="h-10 p-4 w-full mt-2 font-Inter border-2 border-[#8d8d8d] rounded-lg"/>
             </div>
-            <div className="flex flex-row justify-between space-x-4 w-full px-14 mt-6">
-                <button className="flex flex-row justify-center items-center bg-[#2890A7] hover:bg-[#256977] rounded-lg w-[50%] h-10 text-white font-Inter font-bold text-lg">
+            <div className="flex flex-row justify-between space-x-4 w-full px-14 mt-6 mb-10">
+                <button 
+                onClick={() => setShowOnboarding(false)}
+                className="flex flex-row justify-center items-center bg-[#2890A7] hover:bg-[#256977] rounded-lg w-[50%] h-10 text-white font-Inter font-bold text-lg">
                     Accept
                 </button>
-                <button className="flex flex-row justify-center items-center bg-[#8d8d8d] hover:bg-[#2e2e2e] rounded-lg w-[50%] h-10 text-white font-Inter font-bold text-lg">
+                <button 
+                onClick={() => setShowOnboarding(false)}
+                className="flex flex-row justify-center items-center bg-[#8d8d8d] hover:bg-[#2e2e2e] rounded-lg w-[50%] h-10 text-white font-Inter font-bold text-lg">
                     Decline
                 </button>
             </div>
