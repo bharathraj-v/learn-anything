@@ -28,8 +28,6 @@ from dotenv import load_dotenv
 
 
 class Guide(APIView):
-    load_dotenv()
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
     prompt = ChatPromptTemplate.from_messages([
         SystemMessage(content="""
@@ -42,7 +40,7 @@ class Guide(APIView):
                 - Subtopic 1
                 - Subtopic 2
             2. Topic 2...
-            You end the message with "ENDING CONVERSATION" at the end of the message.
+            You end the message with "\n ENDING CONVERSATION" at the end of the message always.
             """),  # The persistent system prompt
         MessagesPlaceholder(
             variable_name="chat_history"),  # Where the memory will be stored.
@@ -53,30 +51,34 @@ class Guide(APIView):
     # memory = ConversationSummaryMemory(llm=OpenAI(
     #     openai_api_key=OPENAI_API_KEY, model='gpt-3.5-turbo-instruct'), memory_key="chat_history", return_messages=True
     #     )
-    llm = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model='gpt-3.5-turbo')
+
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
-    chat_llm_chain = LLMChain(
-        llm=llm,
-        prompt=prompt,
-        verbose=True,
-        memory=memory,
-    )
 
     def post(self, request):
         message = request.data['message']
+        openai_key = request.data['key']
+        
+        llm = ChatOpenAI(openai_api_key=openai_key, model='gpt-3.5-turbo')
+        chat_llm_chain = LLMChain(
+            llm=llm,
+            prompt=self.prompt,
+            verbose=True,
+            memory=self.memory,
+        )
+
         topics_dict = {}
-        response =  self.chat_llm_chain.predict(human_input=message)
+        response =  chat_llm_chain.predict(human_input=message)
         if "ENDING CONVERSATION" in response.split("\n")[-1]:
-            topic_message =  self.chat_llm_chain.memory.chat_memory.messages[-1].content
+            topic_message = chat_llm_chain.memory.chat_memory.messages[-1].content
             topic_message = topic_message.split("\n")
             topic_message = [x for x in topic_message if x != ""]
             topic_message = [x for x in topic_message if '-' in x or any(char.isdigit() for char in x)]
             topics_indexes = [i for i, x in enumerate(topic_message) if x[0].isdigit()]
             topics = [topic_message[i] for i in topics_indexes]
             for i in range(len(topics_indexes)-1):
-                topics_dict[topics[i]] = []
+                topics_dict[topics[i][2:]] = []
                 for j in range(topics_indexes[i]+1, topics_indexes[i+1]):
-                    topics_dict[topics[i]].append(topic_message[j].strip("- "))
+                    topics_dict[topics[i][2:]].append(topic_message[j].strip("- "))
             print(topics_dict)
             self.memory.clear()
             return Response({"message": "CONVERSATION ENDED", "topics": topics_dict}, status=status.HTTP_200_OK)

@@ -2,7 +2,9 @@ import { useState, useEffect } from "react"
 import axios from 'axios';
 
 
-const ChatInterface = () => {
+const ChatInterface = ({topics, setTopics, setTopicsPreview, showSidebar}) => {
+
+    const [openaikey, setOpenaikey] = useState("")
 
     const [history, setHistory] = useState([        
     ]) 
@@ -16,27 +18,40 @@ const ChatInterface = () => {
         chat.scrollTop = chat.scrollHeight;
     }, [history])
 
+    useEffect(() => {
+        const key = localStorage.getItem("openaikey")
+        setOpenaikey(key)
+    }, [])
+
     const sendMessage = async (message) => {
-        const post = {"message": message}
+        const post = {"message": message, "key": openaikey}
         try {
             const res = await axios.post('http://localhost:8000/guide/', post)
             console.log(res.data.message)
+            if (res.data.message !== "CONVERSATION ENDED") {
             setResponse(res.data.message)
             setHistory([...history, { "id": history.length, "sender": "human", "message": message }, { "id": history.length, "sender": "bot", "message": res.data.message }])
             console.log(res.data.topics)
+            } else {
+                setTopics(res.data.topics)
+                localStorage.setItem("topics", JSON.stringify(res.data.topics))
+                setTopicsPreview(true)
+                // save topics to local storage
+            }
 
         } catch (err) {
             console.log(err)
 
         }
     }
+
         
 
 
     return (
-        <div id = "chat" className="absolute mt-[3%] ml-[17%] h-[94%] overflow-scroll w-[83%]">
-            <div className="fixed w-full  h-24 bottom-0">
-            <div className="flex flex-row w-[83%] items-center h-full px-[16%] ">
+        <div id = "chat" className={showSidebar ?"absolute mt-[3%] ml-[17%] h-[94%] overflow-scroll w-[83%]" : "absolute mt-[3.3%] ml-[4%] h-[93.4%] overflow-scroll w-[96%]"}>
+            <div className="fixed w-[100%]  h-24 bottom-0">
+            <div className={ showSidebar? "flex flex-row w-[83%]  justify-center items-center h-full px-[16%]" : "flex flex-row  justify-center items-center h-full px-[16%] "}>
                 <div className="flex rounded-lg border-2 shadow-md border-[#919191] font-Inter border-opacity-50 w-[90%] h-12 px-4 justify-between bg-white items-center">
                     <textarea
                         placeholder="Send a message"

@@ -11,23 +11,53 @@ import TopicsPreview from '../components/TopicsPreview'
 
 export default function Home() {
   const [showOnboarding, setShowOnboarding] = useState(0)
-  const [topicsPreview, setTopicsPreview] = useState(1)
+  const [topicsPreview, setTopicsPreview] = useState(0)
+
+  const [topics, setTopics] = useState([])
+
+  const [keyPresentInLocalStorage, setKeyPresentInLocalStorage] = useState(0)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const key = localStorage.getItem('openaikey')
+      if (key) {
+        setKeyPresentInLocalStorage(1)
+      } else {
+        setShowOnboarding(1)
+      }
+    }
+  }
+  , [])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const topics = localStorage.getItem('topics')
+      if (topics) {
+        setTopics(JSON.parse(topics))
+      } 
+    }
+  }
+  , [topicsPreview])
+
+  const [showSidebar, setShowSidebar] = useState(0)
 
   return (
     <div className='flex bg-[#EDEDED] w-screen h-screen overflow-hidden'>
+            <Topbar />
+
    
       <div className='flex'>
-      <Sidebar />
-      <Topbar />
-      <ChatInterface />
+x
+      <Sidebar topics={topics} setTopics={setTopics} showSidebar={showSidebar} setShowSidebar={setShowSidebar}/>
+      <ChatInterface topics={topics} showSidebar={showSidebar} setShowSidebar={setShowSidebar} setTopics={setTopics}  setTopicsPreview={setTopicsPreview}/>
       </div>{ showOnboarding &&
        <div className='absolute z-100 h-screen w-screen'>
-       <OnboardingModal showOnboarding={showOnboarding} setShowOnboarding={setShowOnboarding}/>
+       <OnboardingModal keyPresentInLocalStorage={keyPresentInLocalStorage} setKeyPresentInLocalStorage={setKeyPresentInLocalStorage} showOnboarding={showOnboarding} setShowOnboarding={setShowOnboarding}/>
        </div>
       }
       { topicsPreview &&
        <div className='absolute z-100 h-screen w-screen'>
-       <TopicsPreview setTopicsPreview={setTopicsPreview} />
+       <TopicsPreview topics={topics} setTopics={setTopics} setTopicsPreview={setTopicsPreview} setShowSidebar={setShowSidebar} />
        </div>
       }
       

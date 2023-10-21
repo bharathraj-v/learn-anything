@@ -1,4 +1,33 @@
-const OnboardingModal = ({showOnboarding, setShowOnboarding}) => {
+import { useState } from 'react'
+
+const OnboardingModal = ({showOnboarding, setShowOnboarding, keyPresentInLocalStorage, setKeyPresentInLocalStorage}) => {
+
+    const [openaikey, setOpenaikey] = useState("")
+    const [cookieterms, setCookieterms] = useState(false)
+    const [openaiterms, setOpenaiterms] = useState(false)
+
+    const handleOpenaikey = (e) => {
+        setOpenaikey(e.target.value)
+    }
+
+    const handleCookieterms = (e) => {
+        setCookieterms(e.target.checked)
+    }
+
+    const handleOpenaiterms = (e) => {
+        setOpenaiterms(e.target.checked)
+    }
+
+    const handleAccept = () => {
+        if (openaikey !== "" && cookieterms && openaiterms) {
+            localStorage.setItem("openaikey", openaikey)
+            setKeyPresentInLocalStorage(true)
+            setShowOnboarding(false)
+        } else {
+            alert("Please fill in all the fields")
+        }
+    }
+
     return (
         <div className="flex w-screen h-screen bg-opacity-50 overflow-clip bg-black ">
             <div className="flex resize-none flex-col  rounded-xl border-1 border-[#8d8d8d] mx-[33%] bg-white   justify-top self-center">
@@ -22,13 +51,19 @@ const OnboardingModal = ({showOnboarding, setShowOnboarding}) => {
             </p>
             <div className="flex flex-row justify-between w-full px-16 mt-4">
                 <div className="flex flex-row">
-                    <input type="checkbox" id="cookieterms" name="cookieterms" value="cookies" className="h-5 w-5 mt-1"/>
+                    <input 
+                    value={cookieterms}
+                    onChange={(e) => handleCookieterms(e)}
+                    type="checkbox" id="cookieterms" name="cookieterms" className="h-5 w-5 mt-1"/>
                     <label for="cookieterms" className="font-Inter font-bold text-[#6D6D6D] px-2 mt-1">I accept the cookie usage terms and allow to save cookies</label>
                 </div>
             </div>
             <div className="flex flex-row justify-between w-full px-16 mt-2">
                 <div className="flex flex-row">
-                    <input type="checkbox" id="openaiterms" name="openaiterms" value="openai" className="h-5 w-5 mt-1"/>
+                    <input 
+                    value={openaiterms}
+                    onChange={(e) => handleOpenaiterms(e)}
+                    type="checkbox" id="openaiterms" name="openaiterms"  className="h-5 w-5 mt-1"/>
                     <label for="openaiterms" className="font-Inter font-bold text-[#6D6D6D] px-2 mt-1">I consent to the usage of OpenAI API through this platform
                     </label>
                 </div>
@@ -37,18 +72,16 @@ const OnboardingModal = ({showOnboarding, setShowOnboarding}) => {
                 <p className="font-Inter font-bold text-[#6D6D6D]">
                      OpenAI API Key
                 </p>
-                <input type="text" id="openaikey" name="openaikey" placeholder="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" className="h-10 p-4 w-full mt-2 font-Inter border-2 border-[#8d8d8d] rounded-lg"/>
+                <input 
+                value={openaikey}
+                onChange={(e) => handleOpenaikey(e)}
+                type="text" id="openaikey" name="openaikey" placeholder="xx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" className="h-10 p-4 w-full mt-2 font-Inter border-2 border-[#8d8d8d] rounded-lg"/>
             </div>
             <div className="flex flex-row justify-between space-x-4 w-full px-14 mt-6 mb-10">
                 <button 
-                onClick={() => setShowOnboarding(false)}
-                className="flex flex-row justify-center items-center bg-[#2890A7] hover:bg-[#256977] rounded-lg w-[50%] h-10 text-white font-Inter font-bold text-lg">
+                onClick={() => handleAccept()}
+                className="flex flex-row justify-center items-center bg-[#2890A7] hover:bg-[#256977] rounded-lg w-[100%] h-10 text-white font-Inter font-bold text-lg">
                     Accept
-                </button>
-                <button 
-                onClick={() => setShowOnboarding(false)}
-                className="flex flex-row justify-center items-center bg-[#8d8d8d] hover:bg-[#2e2e2e] rounded-lg w-[50%] h-10 text-white font-Inter font-bold text-lg">
-                    Decline
                 </button>
             </div>
 
