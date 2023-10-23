@@ -226,10 +226,13 @@ const Sidebar = ({ topics, setTopics, showSidebar, setShowSidebar }) => {
                         L<span className="text-[#6F6F6F]">a</span>
                     </h1>
 
+                    <div className="h-full flex bg-[#e7e7e7] rounded-md my-4 w-full">
+                    </div>
+
                     {
                         // a button to expand the sidebar
-                        <div>
-                            <button className="fixed bottom-0 justify-center mt-4 w-full h-12 " onClick={() => setShowSidebar(!showSidebar)}>
+                        <div className="flex bg-b justify-center w-full bottom-0">
+                            <button className=" flex bottom-0 justify-center w-full h-12 " onClick={() => setShowSidebar(!showSidebar)}>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width={32}
